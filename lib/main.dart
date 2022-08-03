@@ -3,20 +3,25 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/addAlarm.dart';
-//import 'package:numberpicker/numberpicker.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 void main() => runApp(
       MaterialApp(
         title: 'Navigator',
-        home: MyApp(),
+        home: MyDemo(),
       ),
     );
+class MyDemo extends StatefulWidget {
+  @override
+  MyApp createState() => MyApp();
+}
 //asdljkfasd
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends State<MyDemo> {
+ // const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    int currentValue = 3;
     return MaterialApp(
         theme: new ThemeData(scaffoldBackgroundColor: const Color(0xffF0EDCC)),
         home: Scaffold(
@@ -36,22 +41,26 @@ class MyApp extends StatelessWidget {
                   alignment: Alignment.bottomLeft,
                   child: FloatingActionButton(
                     onPressed: () {
-                      showDialog(
+                      showDialog<int>(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
                               scrollable: true,
                               title: Text('Add New Alarm'),
+
+
                               content: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Form(
                                   child: Column(
                                     children: <Widget>[
-                                      TextFormField(
-                                        decoration: InputDecoration(
-                                          labelText: 'Name',
-                                          icon: Icon(Icons.account_box),
-                                        ),
+                                      //fix
+                                      NumberPicker(
+                                        selectedTextStyle: TextStyle(color: Colors.red),
+                                        value: currentValue,
+                                        minValue: 1,
+                                        maxValue: 4,
+                                        onChanged: (value) => setState(() => currentValue = value),
                                       ),
                                       TextFormField(
                                         decoration: InputDecoration(
