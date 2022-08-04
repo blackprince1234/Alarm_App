@@ -54,17 +54,20 @@ class MyApp extends State<MyDemo> {
                                     children: [
                                       StatefulBuilder(builder: (context, setState) {
                                         return NumberPicker(
+                                          infiniteLoop: true,
+                                          //to continuously loop
                                           selectedTextStyle:
                                           TextStyle(color: Colors.red),
                                           value: currentValue,
-                                          minValue: 0,
-                                          maxValue: 23,
+                                          minValue: 1,
+                                          maxValue: 12,
                                           onChanged: (value) =>
                                               setState(() => currentValue = value),
                                         );
                                       }),
                                       StatefulBuilder(builder: (context, setState) {
                                         return NumberPicker(
+                                          infiniteLoop: true,
                                           selectedTextStyle:
                                           TextStyle(color: Colors.red),
                                           value: currentValue,
