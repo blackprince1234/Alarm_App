@@ -126,7 +126,7 @@ class MyApp extends State<MyDemo> {
                                   UpdateText(),
                               actions: [
                                 RaisedButton(
-                                    child: Text("Submit"),
+                                    child: Text("Add"),
                                     onPressed: () {
                                       //when the submit button is pressed
                                     })
@@ -178,7 +178,7 @@ class MyApp extends State<MyDemo> {
                               ),
                               actions: [
                                 RaisedButton(
-                                    child: Text("Submit"),
+                                    child: Text("Add"),
                                     onPressed: () {
                                       // your code
                                     })
