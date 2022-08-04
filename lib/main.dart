@@ -18,13 +18,85 @@ class MyDemo extends StatefulWidget {
   MyApp createState() => MyApp();
 }
 
-//asdljkfasd
+class UpdateText extends StatefulWidget {
+  UpdateTextState createState() => UpdateTextState();
+
+}
+
+class UpdateTextState extends State {
+  String part_of_the_day = 'AM';
+  changeText() {
+    setState(() {
+      if(part_of_the_day == 'AM'){
+        part_of_the_day = 'PM';
+      }
+      else{
+        part_of_the_day = 'AM';
+      }
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    int currentValue = 3;
+    return Row(
+        children: <Widget> [
+          Text(
+            part_of_the_day,
+          ),
+          StatefulBuilder(builder: (context, setState) {
+            return NumberPicker(
+                infiniteLoop: true,
+                //to continuously loop
+                selectedTextStyle:
+                TextStyle(color: Colors.red),
+                value: currentValue,
+                minValue: 1,
+                maxValue: 12,
+                onChanged: (value){
+                  //in process of testing.
+                  if(value == 11 && currentValue ==12){
+                    changeText();
+                  }
+                  if(value == 12 && currentValue == 11){
+                    changeText();
+                  }
+                  setState(() => currentValue = value);
+                }
+
+            );
+          }),
+          StatefulBuilder(builder: (context, setState) {
+            return NumberPicker(
+              infiniteLoop: true,
+              selectedTextStyle:
+              TextStyle(color: Colors.red),
+              value: currentValue,
+              minValue: 0,
+              maxValue: 59,
+              onChanged: (value) =>
+                  setState(() => currentValue = value),
+            );
+          }),
+
+
+        ]
+
+    );
+
+  }
+}
+
+
+
+
+
 class MyApp extends State<MyDemo> {
   // const MyApp({Key? key}) : super(key: key);
 //test
   @override
   Widget build(BuildContext context) {
     int currentValue = 3;
+
     return MaterialApp(
         theme: new ThemeData(scaffoldBackgroundColor: const Color(0xffF0EDCC)),
         home: Scaffold(
@@ -51,42 +123,7 @@ class MyApp extends State<MyDemo> {
                               scrollable: true,
                               title: Text('Add New Alarm'),
                               content:
-                                  Row(
-                                    children: [
-                                      StatefulBuilder(builder: (context, setState) {
-                                        return NumberPicker(
-                                          infiniteLoop: true,
-                                          //to continuously loop
-                                          selectedTextStyle:
-                                          TextStyle(color: Colors.red),
-                                          value: currentValue,
-                                          minValue: 1,
-                                          maxValue: 12,
-                                          onChanged: (value) =>
-                                              setState(() => currentValue = value),
-                                        );
-                                      }),
-                                      StatefulBuilder(builder: (context, setState) {
-                                        return NumberPicker(
-                                          infiniteLoop: true,
-                                          selectedTextStyle:
-                                          TextStyle(color: Colors.red),
-                                          value: currentValue,
-                                          minValue: 0,
-                                          maxValue: 59,
-                                          onChanged: (value) =>
-                                              setState(() => currentValue = value),
-                                        );
-                                      }),
-                                      Text(
-                                        'PM',
-                                      )
-                                    ]
-
-                                  ),
-
-
-
+                                  UpdateText(),
                               actions: [
                                 RaisedButton(
                                     child: Text("Submit"),
