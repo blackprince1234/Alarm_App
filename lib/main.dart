@@ -25,19 +25,24 @@ class UpdateText extends StatefulWidget {
 
 class UpdateTextState extends State {
   String part_of_the_day = 'AM';
+  bool is_am = true;      //keeps track of PM/AM
+
   changeText() {
     setState(() {
       if(part_of_the_day == 'AM'){
         part_of_the_day = 'PM';
+        is_am = false;
       }
       else{
         part_of_the_day = 'AM';
+        is_am = true;
       }
     });
   }
   @override
   Widget build(BuildContext context) {
-    int currentValue = 3;
+    int hour = 3;
+    int minute = 0;
     return Row(
         children: <Widget> [
           Text(
@@ -49,18 +54,17 @@ class UpdateTextState extends State {
                 //to continuously loop
                 selectedTextStyle:
                 TextStyle(color: Colors.red),
-                value: currentValue,
+                value: hour,
                 minValue: 1,
                 maxValue: 12,
                 onChanged: (value){
-                  //in process of testing.
-                  if(value == 11 && currentValue ==12){
+                  if(value == 11 && hour ==12){
                     changeText();
                   }
-                  if(value == 12 && currentValue == 11){
+                  if(value == 12 && hour == 11){
                     changeText();
                   }
-                  setState(() => currentValue = value);
+                  setState(() => hour = value);
                 }
 
             );
@@ -70,13 +74,25 @@ class UpdateTextState extends State {
               infiniteLoop: true,
               selectedTextStyle:
               TextStyle(color: Colors.red),
-              value: currentValue,
+              value: minute,
               minValue: 0,
               maxValue: 59,
               onChanged: (value) =>
-                  setState(() => currentValue = value),
+                  setState(() => minute = value),
             );
           }),
+
+
+          //button to set the time. need to change the size.
+            RaisedButton(
+                child: Text("Add"),
+                //when the submit button is pressed
+                onPressed: () {
+                  print(hour);
+                  print(is_am);
+                  print(minute);
+                })
+
 
 
         ]
@@ -124,13 +140,7 @@ class MyApp extends State<MyDemo> {
                               title: Text('Add New Alarm'),
                               content:
                                   UpdateText(),
-                              actions: [
-                                RaisedButton(
-                                    child: Text("Add"),
-                                    onPressed: () {
-                                      //when the submit button is pressed
-                                    })
-                              ],
+
                             );
                           });
                     },
