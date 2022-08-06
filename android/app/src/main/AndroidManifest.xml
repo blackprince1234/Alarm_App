@@ -3,10 +3,16 @@
    <application
         android:label="flutter_app"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+
+        android:allowBackup="false">
+    >
+       <!-- might need to change back the following line-->
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:showWhenLocked = "true"
+            android:turnScreenOn = "true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

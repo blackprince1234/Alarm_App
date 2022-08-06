@@ -3,9 +3,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/addAlarm.dart';
+
+//imports for notification function
 import 'package:numberpicker/numberpicker.dart';
-//comments
-//hello
+
+
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'; //for local notifications
+import 'package:flutter_app_badger/flutter_app_badger.dart';
+
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
+
+
 void main() => runApp(
       MaterialApp(
         title: 'Navigator',
@@ -20,12 +31,13 @@ class MyDemo extends StatefulWidget {
 
 class UpdateText extends StatefulWidget {
   UpdateTextState createState() => UpdateTextState();
-
 }
 
-class UpdateTextState extends State {
+class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
   String part_of_the_day = 'AM';
   bool is_am = true;      //keeps track of PM/AM
+
+
 
   changeText() {
     setState(() {
@@ -85,12 +97,23 @@ class UpdateTextState extends State {
 
           //button to set the time. need to change the size.
             RaisedButton(
-                child: Text("Add"),
+                child: Text("12"),
                 //when the submit button is pressed
-                onPressed: () {
+                onPressed:() async {
                   print(hour);
                   print(is_am);
                   print(minute);
+
+                  //_requestPermissions();
+                  //await _init();
+
+                  // final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+                  // await _registerMessage(
+                  //   hour: now.hour,
+                  //   minutes: now.minute,
+                  //   message: 'Hello, world!',
+                  // );
+
                 })
 
 
@@ -107,7 +130,48 @@ class UpdateTextState extends State {
 
 
 class MyApp extends State<MyDemo> {
-  // const MyApp({Key? key}) : super(key: key);
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+
+  initLocalNotificationPlugin() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings("mipmap/ic_launcher");
+
+    final IOSInitializationSettings initializationSettingsIOS =
+    IOSInitializationSettings(
+        requestAlertPermission: false,
+        requestBadgePermission: false,
+        requestSoundPermission: false);
+
+
+    final InitializationSettings initializationSettings =
+    InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  @override
+  void initState()  {
+    super.initState();
+    initLocalNotificationPlugin();
+    requestPermission();
+    print("request permission run");
+  }
+  void requestPermission() async{
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  }
+
+
+
 //test
   @override
   Widget build(BuildContext context) {
