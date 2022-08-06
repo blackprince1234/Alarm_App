@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/addAlarm.dart';
+import 'package:flutter_app/local_notification.dart';
 
 //imports for notification function
 import 'package:numberpicker/numberpicker.dart';
@@ -36,6 +37,49 @@ class UpdateText extends StatefulWidget {
 class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
   String part_of_the_day = 'AM';
   bool is_am = true;      //keeps track of PM/AM
+
+  //initState.
+  @override
+  void initState() {
+    print("Innit state runnning");
+    _initializeNotification();
+    super.initState();
+
+  }
+
+  //functions for local notification
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+
+  Future <void> _initializeNotification() async {
+
+    //android
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@drawable/ic_notification');
+    //ios
+    const IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings(
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
+    );
+    //combining
+    const InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+
+  Future <void> requestPermission() async{
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+  }
 
 
 
@@ -104,7 +148,9 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
                   print(is_am);
                   print(minute);
 
-                  //_requestPermissions();
+
+
+                  await requestPermission();
                   //await _init();
 
                   // final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
@@ -131,44 +177,6 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
 
 class MyApp extends State<MyDemo> {
 
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-
-  initLocalNotificationPlugin() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings("mipmap/ic_launcher");
-
-    final IOSInitializationSettings initializationSettingsIOS =
-    IOSInitializationSettings(
-        requestAlertPermission: false,
-        requestBadgePermission: false,
-        requestSoundPermission: false);
-
-
-    final InitializationSettings initializationSettings =
-    InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  }
-
-  @override
-  void initState()  {
-    super.initState();
-    initLocalNotificationPlugin();
-    requestPermission();
-    print("request permission run");
-  }
-  void requestPermission() async{
-    flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-  }
 
 
 

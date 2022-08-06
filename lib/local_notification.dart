@@ -10,14 +10,19 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-LocalNotification localNotification = new LocalNotification();
 
 
 class LocalNotification{
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
 
 
 
+  // @override
+  // void initState()  {
+  //   super.initState();
+  //   initLocalNotificationPlugin();
+  //   requestPermission();
+  //   print("request permission run");
+  // }
 
   //Static으로 하면 안됨.
   void requestPermission(){
