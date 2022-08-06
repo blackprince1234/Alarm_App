@@ -42,9 +42,13 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
   @override
   void initState() {
     print("Innit state runnning");
-    _initializeNotification();
+    _init();
     super.initState();
 
+  }
+  Future<void> _init() async {
+    await _configureLocalTimeZone();
+    await _initializeNotification();
   }
 
   //functions for local notification
@@ -52,7 +56,6 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
 
 
   Future <void> _initializeNotification() async {
-
     //android
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@drawable/ic_notification');
     //ios
@@ -69,6 +72,13 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
+  //location
+
+  Future<void> _configureLocalTimeZone() async {
+    tz.initializeTimeZones();
+    final String? timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+  }
 
   Future <void> requestPermission() async{
     flutterLocalNotificationsPlugin
@@ -81,6 +91,49 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
         );
   }
 
+
+  //to Register Message.
+
+  Future<void> _registerMessage({
+    required int hour,
+    required int minutes,
+    required message,
+  }) async {
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime scheduledDate = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minutes,
+    );
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      0,
+      'flutter_local_notifications',
+      message,
+      scheduledDate,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'channel id',
+          'channel name',
+          importance: Importance.max,
+          priority: Priority.high,
+          ongoing: true,
+          styleInformation: BigTextStyleInformation(message),
+          icon: 'ic_notification',
+        ),
+        iOS: const IOSNotificationDetails(
+          badgeNumber: 1,
+        ),
+      ),
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation:
+      UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
 
 
   changeText() {
@@ -147,20 +200,17 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
                   print(hour);
                   print(is_am);
                   print(minute);
-
-
-
                   await requestPermission();
-                  //await _init();
 
-                  // final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-                  // await _registerMessage(
-                  //   hour: now.hour,
-                  //   minutes: now.minute,
-                  //   message: 'Hello, world!',
-                  // );
-
-                })
+                  final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+                  await _registerMessage(
+                      hour: now.hour,
+                      minutes: now.minute + 1,
+                      message: 'Hello, world!',
+                  );
+                  //registered notification.
+                  },
+                )
 
 
 
@@ -176,10 +226,6 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
 
 
 class MyApp extends State<MyDemo> {
-
-
-
-
 //test
   @override
   Widget build(BuildContext context) {
