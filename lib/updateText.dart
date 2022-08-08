@@ -188,6 +188,9 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
               if(!is_am){
                 hour+=12;
               }
+              else if(is_am && hour == 12){     //if hour is 0...
+                hour = 0;
+              }
               print(is_am);
               print(minute);
               await requestPermission();
