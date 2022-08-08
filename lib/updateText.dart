@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -96,9 +97,11 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
       minutes,
     );
 
+    const int insistentFlag = 4;
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
       'flutter_local_notifications',
+
       message,
       scheduledDate,
       NotificationDetails(
@@ -106,6 +109,7 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
           'channel id',
           'channel name',
           importance: Importance.max,
+          additionalFlags: Int32List.fromList(<int>[insistentFlag]),
           priority: Priority.high,
           ongoing: true,
           styleInformation: BigTextStyleInformation(message),
