@@ -189,7 +189,10 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
             //when the submit button is pressed
             onPressed:() async {
 
-              if(!is_am){
+              if(!is_am && hour == 12){
+                hour = 12;
+              }
+              else if(!is_am){
                 hour+=12;
               }
               else if(is_am && hour == 12){     //if hour is 0...
