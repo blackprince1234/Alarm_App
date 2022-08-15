@@ -1,4 +1,10 @@
-//final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_app/Local_Notification.dart';
+
 //imports for notification function
 import 'package:numberpicker/numberpicker.dart';
 
@@ -10,19 +16,17 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-
-
-class local_notification {
-  Future<void> _init() async {
+class LocalNotification{
+  static Future<void>  initAll() async {
     await _configureLocalTimeZone();
     await _initializeNotification();
   }
 
   //functions for local notification
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 
-  Future <void> _initializeNotification() async {
+  static Future <void> _initializeNotification() async {
     //android
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@drawable/ic_notification');
     //ios
@@ -41,13 +45,13 @@ class local_notification {
 
   //location
 
-  Future<void> _configureLocalTimeZone() async {
+  static Future<void> _configureLocalTimeZone() async {
     tz.initializeTimeZones();
     final String? timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(timeZoneName!));
   }
 
-  Future <void> requestPermission() async{
+  static Future <void> requestPermission() async{
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
         IOSFlutterLocalNotificationsPlugin>()
@@ -61,7 +65,7 @@ class local_notification {
 
   //to Register Message.
 
-  Future<void> _registerMessage({
+  static Future<void> registerMessage({
     required int hour,
     required int minutes,
     required message,
@@ -76,9 +80,11 @@ class local_notification {
       minutes,
     );
 
+    const int insistentFlag = 4;
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
       'flutter_local_notifications',
+
       message,
       scheduledDate,
       NotificationDetails(
@@ -86,6 +92,7 @@ class local_notification {
           'channel id',
           'channel name',
           importance: Importance.max,
+          additionalFlags: Int32List.fromList(<int>[insistentFlag]),
           priority: Priority.high,
           ongoing: true,
           styleInformation: BigTextStyleInformation(message),

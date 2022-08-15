@@ -1,18 +1,17 @@
-import 'dart:io';
+//Purpose: The home screen of the app, has floating buttons to add and subtract alarms.
 
+
+//imports for UI
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/addAlarm.dart';
-import 'package:flutter_app/local_notification.dart';
-import 'package:flutter_app/updateText.dart';
+import 'package:flutter_app/Local_Notification.dart';
+import 'package:flutter_app/Adding_Alarm.dart';
 
 //imports for notification function
 import 'package:numberpicker/numberpicker.dart';
-
-
-import 'package:flutter_local_notifications/flutter_local_notifications.dart'; //for local notifications
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
-
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -32,17 +31,9 @@ class MyDemo extends StatefulWidget {
 }
 
 
-
-
-
-
-
 class MyApp extends State<MyDemo> {
-//test
   @override
   Widget build(BuildContext context) {
-    int currentValue = 3;
-
     return MaterialApp(
         theme: new ThemeData(scaffoldBackgroundColor: const Color(0xffF0EDCC)),
         home: Scaffold(
@@ -119,7 +110,7 @@ class MyApp extends State<MyDemo> {
                                 RaisedButton(
                                     child: Text("Add"),
                                     onPressed: () {
-                                      // your code
+
                                     })
                               ],
                             );
@@ -133,9 +124,6 @@ class MyApp extends State<MyDemo> {
             ),
           ),
           drawer: Drawer(
-            // Add a ListView to the drawer. This ensures the user can scroll
-            // through the options in the drawer if there isn't enough vertical
-            // space to fit everything.
             child: ListView(
               // Important: Remove any padding from the ListView.
               padding: EdgeInsets.zero,
