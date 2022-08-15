@@ -125,7 +125,6 @@ class MyApp extends State<MyDemo> {
           ),
           drawer: Drawer(
             child: ListView(
-              // Important: Remove any padding from the ListView.
               padding: EdgeInsets.zero,
               children: [
                 const DrawerHeader(

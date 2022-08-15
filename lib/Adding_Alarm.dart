@@ -2,11 +2,15 @@
 
 
 //Imports for UI's
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+//importing other classes
 import 'package:flutter_app/Local_Notification.dart';
+import 'package:flutter_app/User.dart';
+
 
 //Imports  for notification function
 import 'package:numberpicker/numberpicker.dart';
@@ -14,6 +18,7 @@ import 'package:flutter_app/Local_Notification.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'; //for local notifications
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //Imports for timezone
 import 'package:timezone/data/latest.dart' as tz;
@@ -24,10 +29,14 @@ class UpdateText extends StatefulWidget {
   UpdateTextState createState() => UpdateTextState();
 }
 
+
 class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
   //Class member variables.
   String part_of_the_day = 'AM';  //variable used to keep track of time of the day, setting String accordingly.
   bool is_am = true;              //keeps track of PM/AM
+
+
+
 
 
   //InitState function (Acts like a constructor)
@@ -133,6 +142,25 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
                 message: 'Wake up!',
               );
 
+
+              //creating an instance of user1 for Shared Preference.
+              //User user1 = new User(hour, minute);
+
+              //convert it to string using Json Encode.
+              //String user = jsonEncode(user1);
+
+
+              //creating SharedPreferences
+              final prefs = await SharedPreferences.getInstance();
+              //prefs.setString('userdata', user);
+
+              final int counter = (prefs.getInt('counter') ?? 0) + 1;
+              prefs.setInt('counter', counter);
+              print("COUNTER");
+              print(counter);
+
+
+
             },
           )
 
@@ -144,3 +172,4 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
 
   }
 }
+

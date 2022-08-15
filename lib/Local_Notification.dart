@@ -84,7 +84,6 @@ class LocalNotification{
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
       'flutter_local_notifications',
-
       message,
       scheduledDate,
       NotificationDetails(
