@@ -49,6 +49,22 @@ class MyApp extends State<MyDemo> {
             padding: EdgeInsets.all(10),
             child: Stack(
               children: <Widget>[
+
+                //Listview to make it scrollable.
+                ListView.builder(
+                  itemCount: 20,
+                  itemBuilder: (context, position) {
+                    return Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          position.toString(),
+                          style: TextStyle(fontSize: 22.0),
+                        ),
+                      ),
+                    );
+                  },
+                ),
                 Align(
                   alignment: Alignment.bottomLeft,
                   child: FloatingActionButton(

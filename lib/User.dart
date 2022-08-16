@@ -1,17 +1,36 @@
-//Keeping track of instance variables.
-class User {
+//Class for list of Alarms. (Used later when creating an instance of the class)
+
+
+
+class AlarmList {
+  final int id;
   final int hour;
-  final int minute;
+  final int minutes;
 
-  User(this.hour, this.minute);
 
-  User.fromJson(Map<String, dynamic> json)
-      : hour = json['hour'],
-        minute = json['minute'];
+  AlarmList({
+    required this.id,
+    required this.hour,
+    required this.minutes,
+  });
 
-  Map<String, dynamic> toJson() =>
-      {
-        'hour': hour,
-        'minute': minute,
-      };
+
+
+
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'hour': hour,
+      'minute': minutes,
+    };
+  }
+
+  // Implement toString to make it easier to see information about
+  // each alarm when using the print statement.
+  @override
+  String toString() {
+    return 'Alarm{id: $id, hour: $hour, minutes: $minutes}';
+  }
+
 }

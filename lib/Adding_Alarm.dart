@@ -9,8 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //importing other classes
 import 'package:flutter_app/Local_Notification.dart';
+import 'package:flutter_app/Sqlite_Service.dart';
 import 'package:flutter_app/User.dart';
-
+import 'package:flutter/widgets.dart';
 
 //Imports  for notification function
 import 'package:numberpicker/numberpicker.dart';
@@ -19,7 +20,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'; /
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 //Imports for timezone
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -34,8 +36,6 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
   //Class member variables.
   String part_of_the_day = 'AM';  //variable used to keep track of time of the day, setting String accordingly.
   bool is_am = true;              //keeps track of PM/AM
-
-
 
 
 
@@ -61,13 +61,13 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
     });
   }
 
-
+  static int hour = 3;   //Default hour set to 3.
+  static int minute = 0; //Default minute set to 0.
 
   @override
   Widget build(BuildContext context) {
     //Default setting
-    int hour = 3;   //Default hour set to 3.
-    int minute = 0; //Default minute set to 0.
+
 
 
     return Row(
@@ -148,18 +148,87 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
 
               //convert it to string using Json Encode.
               //String user = jsonEncode(user1);
-
-
               //creating SharedPreferences
               final prefs = await SharedPreferences.getInstance();
               //prefs.setString('userdata', user);
 
               final int counter = (prefs.getInt('counter') ?? 0) + 1;
               prefs.setInt('counter', counter);
-              print("COUNTER");
-              print(counter);
+              // print("COUNTER");
+              // print(counter);
 
 
+
+
+
+
+
+              WidgetsFlutterBinding.ensureInitialized();
+              final database = openDatabase(
+                join(await getDatabasesPath(), 'alarm_database.db'),
+
+                onCreate: (db, version) {
+                  return db.execute(
+                    "CREATE TABLE Alarms(id INTEGER PRIMARY KEY, hour INTEGER, minute INTEGER)",
+                  );
+                },
+                version: 1,
+              );
+
+              //Method to add another Alarm.
+              Future<void> addAlarm(AlarmList simple_alarm) async {
+                final Database db = await database;
+                await db.insert(
+                  'Alarms',
+                  simple_alarm.toMap(),
+                  conflictAlgorithm: ConflictAlgorithm.replace,
+                );
+              }
+
+
+              // A method that retrieves all the dogs from the dogs table.
+              Future<List<AlarmList>> fetchAlarms() async {
+                // Get a reference to the database.
+                final db = await database;
+
+                // Query the table for all The Dogs.
+                final List<Map<String, dynamic>> maps = await db.query('Alarms');
+
+                // Convert the List<Map<String, dynamic> into a List<Dog>.
+                return List.generate(maps.length, (i) {
+                  return AlarmList(
+                    id: maps[i]['id'],
+                    hour: maps[i]['hour'],
+                    minutes: maps[i]['minute'],
+                  );
+                });
+              }
+
+
+
+              //Method used to delete specific alarm from the list.
+              Future<void> deleteAlarm(int id) async {
+                // Get a reference to the database.
+                final db = await database;
+                await db.delete(
+                  'Alarms',
+                  where: 'id = ?',
+                  whereArgs: [id],
+                );
+              }
+
+
+
+              var fido = AlarmList(
+                id: counter,
+                hour: hour,
+                minutes: minute,
+              );
+
+              await addAlarm(fido);
+
+              // Now, use the method above to retrieve all the dogs.
+              print(await fetchAlarms()); // Prints a list that include Fido.
 
             },
           )
