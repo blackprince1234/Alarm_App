@@ -173,47 +173,9 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
                   version: 1,
                 );
 
-                //Method to add another Alarm.
-                Future<void> addAlarm(AlarmList simple_alarm) async {
-                  final Database db = await database;
-                  await db.insert(
-                    'Alarms',
-                    simple_alarm.toMap(),
-                    conflictAlgorithm: ConflictAlgorithm.replace,
-                  );
-                }
 
 
-                // A method that retrieves all the dogs from the dogs table.
-                Future<List<AlarmList>> fetchAlarms() async {
-                  // Get a reference to the database.
-                  final db = await database;
-
-                  // Query the table for all The Dogs.
-                  final List<Map<String, dynamic>> maps = await db.query('Alarms');
-
-                  // Convert the List<Map<String, dynamic> into a List<Dog>.
-                  return List.generate(maps.length, (i) {
-                    return AlarmList(
-                      id: maps[i]['id'],
-                      hour: maps[i]['hour'],
-                      minutes: maps[i]['minute'],
-                    );
-                  });
-                }
-
-
-
-                //Method used to delete specific alarm from the list.
-                Future<void> deleteAlarm(int id) async {
-                  final db = await database;
-                  await db.delete(
-                    'Alarms',
-                    where: 'id = ?',
-                    whereArgs: [id],
-                  );
-                }
-
+                //I don't need to create antoher separate method for adding/deleting alarms. (It's only couple of lines, and I cnan get the databbase from anywhere claling wait)
 
                 var fido = AlarmList(
                   id: counter,
@@ -221,8 +183,30 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
                   minutes: minute,
                 );
 
-                await addAlarm(fido);
-                print(await fetchAlarms()); // Prints a list that include Fido.
+                //await addAlarm(fido);
+                //print(await fetchAlarms()); // Prints a list that include Fido.
+
+
+                //adding a new alarm.
+                final Database db = await database;
+                await db.insert(
+                  'Alarms',
+                  fido.toMap(),
+                  conflictAlgorithm: ConflictAlgorithm.replace,
+                );
+
+
+                final List<Map<String, dynamic>> maps = await db.query('Alarms');
+                   List.generate(maps.length, (i) {
+                    AlarmList(
+                      id: maps[i]['id'],
+                      hour: maps[i]['hour'],
+                      minutes: maps[i]['minute'],
+                    );
+                  });
+                maps.forEach((e) {
+                  print(e.toString());
+                });
 
               },
             )
