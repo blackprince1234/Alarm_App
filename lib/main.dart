@@ -5,36 +5,42 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 import 'package:flutter_app/Local_Notification.dart';
 import 'package:flutter_app/Adding_Alarm.dart';
-
 //imports for notification function
 import 'package:numberpicker/numberpicker.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-
-
+import 'package:flutter/widgets.dart';
+import 'package:path/path.dart';
+import 'package:flutter/widgets.dart';
 
 void main() => runApp(
+
       MaterialApp(
         title: 'Navigator',
         home: MyDemo(),
       ),
     );
 
-class MyDemo extends StatefulWidget {
+class MyDemo extends StatefulWidget  {
   @override
   MyApp createState() => MyApp();
 }
 
 
 class MyApp extends State<MyDemo> {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
         theme: new ThemeData(scaffoldBackgroundColor: const Color(0xffF0EDCC)),
         home: Scaffold(
           appBar: AppBar(
@@ -50,7 +56,7 @@ class MyApp extends State<MyDemo> {
             child: Stack(
               children: <Widget>[
 
-                //Listview to make it scrollable.
+                //ListView to show all the alarms.
                 ListView.builder(
                   itemCount: 20,
                   itemBuilder: (context, position) {
@@ -58,6 +64,7 @@ class MyApp extends State<MyDemo> {
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Text(
+
                           position.toString(),
                           style: TextStyle(fontSize: 22.0),
                         ),
@@ -161,6 +168,7 @@ class MyApp extends State<MyDemo> {
                     Navigator.pop(context);
                   },
                 ),
+
                 ListTile(
                   title: const Text('Item 2'),
                   onTap: () {

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/Local_Notification.dart';
+import 'package:flutter_app/Sqlite_Service.dart';
 
 //imports for notification function
 import 'package:numberpicker/numberpicker.dart';
@@ -23,6 +24,7 @@ class LocalNotification{
   static Future<void>  initAll() async {
     await _configureLocalTimeZone();
     await _initializeNotification();
+
   }
 
   //functions for local notification

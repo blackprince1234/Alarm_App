@@ -115,7 +115,7 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
 
 
           //(UI's for setting the alarm -> need to fix the locations and etc)
-          //When the submit button is pressed
+          //UI for set button.
           Container(
             height: 48,
             width: 50,
@@ -126,6 +126,11 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
                   fontSize: 10,
                 ),
               ),
+
+
+
+
+              //When the Set Button is clicked.
               onPressed:() async {
                 //Keeping track of time once the button is pressed & Minor Bugs
                 if(!is_am && hour == 12){
@@ -137,9 +142,6 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
                 else if(is_am && hour == 12){
                   hour = 0;
                 }
-                print(is_am);
-                print(hour);
-                print(minute);
 
 
                 //Requesting permission for notifications, registering the message.
@@ -160,53 +162,24 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
 
 
 
-
-                WidgetsFlutterBinding.ensureInitialized();
-                final database = openDatabase(
-                  join(await getDatabasesPath(), 'alarm_database.db'),
-
-                  onCreate: (db, version) {
-                    return db.execute(
-                      "CREATE TABLE Alarms(id INTEGER PRIMARY KEY, hour INTEGER, minute INTEGER)",
-                    );
-                  },
-                  version: 1,
-                );
-
-
-
-                //I don't need to create antoher separate method for adding/deleting alarms. (It's only couple of lines, and I cnan get the databbase from anywhere claling wait)
-
                 var fido = AlarmList(
                   id: counter,
                   hour: hour,
                   minutes: minute,
                 );
 
-                //await addAlarm(fido);
-                //print(await fetchAlarms()); // Prints a list that include Fido.
-
-
                 //adding a new alarm.
-                final Database db = await database;
-                await db.insert(
-                  'Alarms',
-                  fido.toMap(),
-                  conflictAlgorithm: ConflictAlgorithm.replace,
-                );
+                await SqliteService.addAlarm(fido);
+                print(await SqliteService.fetchAlarms());
 
 
-                final List<Map<String, dynamic>> maps = await db.query('Alarms');
-                   List.generate(maps.length, (i) {
-                    AlarmList(
-                      id: maps[i]['id'],
-                      hour: maps[i]['hour'],
-                      minutes: maps[i]['minute'],
-                    );
-                  });
-                maps.forEach((e) {
-                  print(e.toString());
-                });
+                //Sample Test :) Works! (Remember that the counter starts from 0, not 1)
+                AlarmList alarm = await SqliteService.specificIndex(1);
+
+                int user_hour = alarm.hour;
+                int user_minutes = alarm.minutes;
+
+                print("Hour: $user_hour Minutes: $user_minutes");
 
               },
             )
