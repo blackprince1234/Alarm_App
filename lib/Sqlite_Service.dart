@@ -49,9 +49,10 @@ class SqliteService {
     );
 
     final db = await database;
-
+    int count = 0;
     // Query the table for all the alarms.
     final List<Map<String, dynamic>> maps = await db.query('Alarms');
+
     return List.generate(maps.length, (i) {
       return AlarmList(
         id: maps[i]['id'],
@@ -78,7 +79,22 @@ class SqliteService {
         minutes: maps[ID_]['minute'],
       );
   }
+  // A method that retrieves all the dogs from the dogs table.
+  static Future<int> getSize() async {
+    final database = openDatabase(
+      join(await getDatabasesPath(), 'alarm_database.db'),
+      version: 1,
+    );
 
+    final db = await database;
+    int count = 0;
+    // Query the table for all the alarms.
+    final List<Map<String, dynamic>> maps = await db.query('Alarms');
+    int size = maps.length;
+    print("LENGTH: $size");
+    return maps.length;
+
+  }
 
 
 

@@ -68,9 +68,6 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
   @override
   Widget build(BuildContext context) {
     //Default setting
-
-
-
     return Row(
         children: <Widget> [
           Text(
@@ -162,14 +159,14 @@ class UpdateTextState extends State<UpdateText> with WidgetsBindingObserver{
 
 
 
-                var fido = AlarmList(
+                var userAlarm = AlarmList(
                   id: counter,
                   hour: hour,
                   minutes: minute,
                 );
 
                 //adding a new alarm.
-                await SqliteService.addAlarm(fido);
+                await SqliteService.addAlarm(userAlarm);
                 print(await SqliteService.fetchAlarms());
 
 

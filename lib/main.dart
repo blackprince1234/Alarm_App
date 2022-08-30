@@ -2,6 +2,7 @@
 
 
 //imports for UI
+import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,9 +21,13 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:flutter/widgets.dart';
+import 'Sqlite_Service.dart';
+import 'User.dart';
 
-void main() => runApp(
 
+
+
+void main() async => runApp (
       MaterialApp(
         title: 'Navigator',
         home: MyDemo(),
@@ -35,12 +40,64 @@ class MyDemo extends StatefulWidget  {
 }
 
 
-class MyApp extends State<MyDemo> {
+class MyApp extends State<MyDemo>{
+  List<int> hours = [];
+  List<int> minutes = [];
+
+
+  Future<int> getHour(int position) async{
+    // print(await SqliteService.fetchAlarms());
+    AlarmList alarm = await SqliteService.specificIndex(position);
+    int user_hour = alarm.hour;
+    // print("USER HOUR $user_hour");
+    return user_hour;
+  }
+  Future<int> getMinute(int position) async{
+    // print(await SqliteService.fetchAlarms());
+    AlarmList alarm = await SqliteService.specificIndex(position);
+    int user_minutes = alarm.minutes;
+    // print("USER HOUR $user_hour");
+    return user_minutes;
+  }
+  //need to work on length.
+  Future<int> Size() async{
+    SqliteService.init_();
+    int length = (await SqliteService.getSize());
+    print("LENGTH $length");
+    return length;
+  }
+
+
+  //Testing.
+  @override
+  void initState() {
+    int size = 0;
+    Size().then(
+            (value){
+              size = value;
+              print("Size $value");
+            }
+    );
+
+    for(int i=0; i<size; i++){
+      getHour(i).then(
+              (value){
+            int hour = value;
+            hours.add(hour);
+          }
+      );
+    }
+
+    super.initState();
+  }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
         theme: new ThemeData(scaffoldBackgroundColor: const Color(0xffF0EDCC)),
         home: Scaffold(
           appBar: AppBar(
@@ -54,22 +111,25 @@ class MyApp extends State<MyDemo> {
           body: Container(
             padding: EdgeInsets.all(10),
             child: Stack(
-              children: <Widget>[
-
-                //ListView to show all the alarms.
+              children: <Widget >[
                 ListView.builder(
-                  itemCount: 20,
-                  itemBuilder: (context, position) {
+                    itemCount: hours.length,
+                    itemBuilder: (context, position) {
+                      //might need to fix the position +1 part.
+                    int getHour = hours[position+1];
+                    print("Got Hour $getHour Position $position");
+
                     return Card(
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Text(
-
-                          position.toString(),
+                          "HI",
+                         // getHour.toString(),
                           style: TextStyle(fontSize: 22.0),
                         ),
                       ),
                     );
+
                   },
                 ),
                 Align(
